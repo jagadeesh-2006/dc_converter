@@ -1,5 +1,3 @@
-// src/lib/logic.js
-
 // Operator table for parser
 const OPS = {
   '~': { prec: 5, assoc: 'right', arity: 1 },
