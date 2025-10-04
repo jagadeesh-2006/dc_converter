@@ -1,21 +1,3 @@
-// export default function VerilogCode({ moduleName="expr_module", outName="Y", vars=[], expr, verilog }) {
-//   return (
-//     <div className="card p-4 bg-slate-800 rounded">
-//       <h3 className="font-semibold mb-2">Verilog Module</h3>
-//       <pre className="bg-black p-3 rounded text-xs text-green-300 overflow-auto">{verilog}</pre>
-//       <div className="mt-2 flex gap-2">
-//         <button onClick={() => navigator.clipboard.writeText(verilog)} className="px-3 py-1 bg-sky-500 rounded text-slate-900">Copy</button>
-//         <a
-//           className="px-3 py-1 bg-slate-700 rounded text-slate-200"
-//           href={`data:text/plain;charset=utf-8,${encodeURIComponent(verilog)}`}
-//           download={`${moduleName}.v`}
-//         >Download</a>
-//       </div>
-//     </div>
-//   );
-// }
-
-
 export default function VerilogCode({ moduleName="expr_module", outName="Y", vars=[], expr, verilog }) {
   return (
     <div className="card p-4 bg-slate-900 rounded shadow-lg mx-auto max-w-3xl">
