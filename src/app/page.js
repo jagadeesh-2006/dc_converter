@@ -17,7 +17,7 @@ export default function Home() {
 
   return (
     <main style={{
-      minHeight: '100vh',
+      minHeight: '120vh',
       background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
       color: '#e0f2fe',
       position: 'relative',
