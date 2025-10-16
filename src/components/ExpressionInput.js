@@ -21,10 +21,19 @@ export default function ExpressionInput({ expr, setExpr, setResult, setError }) 
       const data = truthTableFromExpr(expr.trim());
       const kmap = (data.vars.length >= 2 && data.vars.length <= 5) ? buildKMap(data.vars, data.rows) : null;
       const qm = qmSimplify(data.vars, data.rows);
-      const ast = rpnToAST(data.rpn);
-      const verilog = generateVerilogModule("expr_module", data.vars, "Y", expr);
+      // Use simplified expression from QM for circuit (AST) and Verilog
+      const simplifiedExpr = qm.simplified || expr;
+      // Attempt to build RPN/AST from simplified expression; fall back to original rpn
+      let simpRpn;
+      try {
+        simpRpn = toRPN(tokenize(simplifiedExpr));
+      } catch (e) {
+        simpRpn = data.rpn;
+      }
+      const ast = rpnToAST(simpRpn);
+      const verilog = generateVerilogModule("expr_module", data.vars, "Y", simplifiedExpr);
       const tb = generateVerilogTestbench("expr_module", data.vars, "Y", data.rows);
-      setResult({ vars: data.vars, rows: data.rows, rpn: data.rpn, kmap, qm, ast, verilog, tb });
+      setResult({ vars: data.vars, rows: data.rows, rpn: data.rpn, kmap, qm, ast, verilog, tb, simplifiedExpr });
     } catch (e) {
       setError(e.message || String(e));
       setResult(null);
@@ -96,7 +105,7 @@ export default function ExpressionInput({ expr, setExpr, setResult, setError }) 
   return (
     <div style={containerStyle}>
       <label style={labelStyle}>⚡ Boolean Expression</label>
-      
+
       <div style={{ display: 'flex', gap: '16px', alignItems: 'stretch' }}>
         <input
           value={expr}
@@ -118,8 +127,8 @@ export default function ExpressionInput({ expr, setExpr, setResult, setError }) 
             e.target.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.2)';
           }}
         />
-        <button 
-          onClick={handleGenerate} 
+        <button
+          onClick={handleGenerate}
           style={buttonStyle}
           onMouseEnter={(e) => {
             e.target.style.transform = 'translateY(-2px)';
@@ -133,11 +142,11 @@ export default function ExpressionInput({ expr, setExpr, setResult, setError }) 
           Generate
         </button>
       </div>
-      
+
       <div style={previewBoxStyle}>
-        <span style={{ 
-          fontSize: '14px', 
-          color: '#64748b', 
+        <span style={{
+          fontSize: '14px',
+          color: '#64748b',
           fontWeight: '600',
           textTransform: 'uppercase',
           letterSpacing: '0.5px'
@@ -147,12 +156,12 @@ export default function ExpressionInput({ expr, setExpr, setResult, setError }) 
         {varsPreview.length > 0 ? (
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
             {varsPreview.map((v, i) => (
-              <span 
+              <span
                 key={i}
-                style={{ 
-                  fontFamily: 'monospace', 
-                  fontSize: '16px', 
-                  color: '#38bdf8', 
+                style={{
+                  fontFamily: 'monospace',
+                  fontSize: '16px',
+                  color: '#38bdf8',
                   fontWeight: '700',
                   backgroundColor: 'rgba(56, 189, 248, 0.1)',
                   padding: '8px 16px',
@@ -165,9 +174,9 @@ export default function ExpressionInput({ expr, setExpr, setResult, setError }) 
             ))}
           </div>
         ) : (
-          <span style={{ 
-            fontFamily: 'monospace', 
-            fontSize: '16px', 
+          <span style={{
+            fontFamily: 'monospace',
+            fontSize: '16px',
             color: '#475569',
             fontStyle: 'italic'
           }}>

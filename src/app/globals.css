@@ -4,19 +4,23 @@
 
 /* Extra card style */
 .card {
-  /* Remove solid background color, let Tailwind classes handle it */
   background-color: transparent;
   border-radius: 0.75rem; /* rounded-xl */
-  border: 1px solid rgba(255, 255, 255, 0.15); /* subtle border */
+  border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1),
               0 4px 6px -4px rgba(0,0,0,0.1); /* shadow-lg */
   backdrop-filter: blur(12px); /* glass effect */
   -webkit-backdrop-filter: blur(12px);
 }
 
-
 .container {
   max-width: 72rem; /* max-w-6xl */
   margin-left: auto;
   margin-right: auto; /* mx-auto */
+}
+
+html, body, #__next {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
